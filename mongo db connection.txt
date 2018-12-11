@@ -1,0 +1,114 @@
+database -> collections -> documents
+
+---> DATABASE CREATE and DROP
+
+use testdb
+db
+show dbs
+db.testcollection.insert({"Name":"Test"})
+show dbs
+db.dropDatabase()
+show dbs
+
+---> COLLECTIONS CREATE AND DROP 
+
+db.createCollection("Test")
+show collections
+db.newcollection.insert({"Name": "Test"})
+show collections
+db.newcollection.drop()
+show collections
+
+COMPANY -> EMPOLOYEES -> documents
+
+use company
+db.employees.insert([
+{
+])
+---> QUERY DOCUMENTS
+
+db.employees.find().pretty()
+db.employees.findOne()
+db.employees.findTwo()
+db.employees.find({
+"EmpNo" : "2"
+})
+db.employees.find({
+"Age" : {$lt:"30"}
+})
+db.employees.find({
+"Age" : {$lte:"30"}
+})
+db.employees.find({
+"Age" : {$gt:"30"}
+})
+db.employees.find({
+"Age" : {$ne:"30"}
+})
+
+---> AND/OR CONDITIONS
+
+db.employees.find({
+"Skill" : "MongoDB", "Salary" : "80000"
+}).pretty()
+db.employees.find({
+  $or: [{"Skill" : "MongoDB"}, {"Salary" : "100000"}]
+}).pretty()
+db.employees.find({
+  "Skill":"MongoDB" , $or: [{"Salary" : "80000"}, {"Salary" : "85000"}]
+}).pretty()
+
+---> UPDATE DOCUMENT
+
+db.employees.find()
+db.employees.update(
+                     {"_id" : ObjectId("5c0dfe087478f0fb5e9f8c7e")},
+                     {$set: {"Salary" : "100000"}})
+db.employees.find().pretty() 
+db.employees.update(
+                     {"Skill":"MongoDB"},
+                     {$set:{"Salary":"1500000"}},
+                     {multi:true})
+db.employees.find().pretty()
+db.employees.find({"Skill":"MongoDB"})
+
+ ---> REMOVE DOCUMENT
+
+db.employees.find()
+db.employees.remove({"_id" : ObjectId("5c0dfe087478f0fb5e9f8c7e")})
+db.employees.remove({"_id" : ObjectId("5c0dfe1e7478f0fb5e9f8c7f")})          
+db.employees.find().pretty()
+db.employees.remove({"Skill":"MongoDB"})                          
+db.employees.find()      
+
+---> SELECTING FILEDS
+
+db.employees.find().pretty()
+db.employees.find({},{"FirstName": 1,"LastName": 1 ,"_id" : 0}).pretty()
+db.employees.find().pretty()  
+
+---> LIMIT, SKIP, SORT
+
+db.employees.find({},{"FirstName": 1,"EmpNo": 1 ,"_id" : 0}).pretty()
+db.employees.find({},{"FirstName": 1,"EmpNo": 1 ,"_id" : 0}).pretty()
+db.employees.find({},{"FirstName": 1,"EmpNo": 1 ,"_id" : 0}).pretty().skip(3).limit()
+db.employees.find().pretty()
+db.employees.find({},{"FirstName": 1,"EmpNo": 1 ,"_id" : 0}).pretty().sort({"FirstName": 1})
+db.employees.find({},{"FirstName": 1,"EmpNo": 1 ,"_id" : 0}).pretty().sort({"FirstName":-1})
+                      
+---> INDEXS 
+
+db.employees.find().pretty()
+db.employees.ensureIndex({"Email": 1})
+db.employees.getIndexes()
+db.employees.dropIndex({"Email":1})
+db.employees.getIndexes()
+
+---> AGGREGATION	
+
+db.employees.aggregate([{$group: {_id :"$Gender",Total: {$sum:1} }}])
+db.employees.find()
+db.employees.aggregate([{$group: {_id :"$Gender",MaxAge:{$max:"$Age"} }}])
+db.employees.aggregate([{$group: {_id :"$Gender",MinAge:{$min:"$Age"} }}])
+
+     
